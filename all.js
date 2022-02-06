@@ -14,18 +14,16 @@ class Database{
     
     set(info, is) {
         const data = this.readFile();
-
-        const text = info.toString()
+        const text = info.toString();
 
         function setValue(obj, path, value) {
-            var a = path.split(".");
-            var o = obj
-            while (a.length - 1) {
-                var n = a.shift();
-                if (!(n in o)) o[n] = {}
-                o = o[n]
+            var ps = path.split(".");
+            while (ps.length - 1) {
+                var pst = ps.shift();
+                if (!(pst in obj)) obj[pst] = {};
+                obj = obj[pst];
             }
-            o[a[0]] = value
+            obj[ps[0]] = value;
         }
         
         setValue(data, text, is);
@@ -78,6 +76,13 @@ class Database{
         const data = this.get(info);
         if(isNaN(data) && isNaN(number)) throw new Error("This is not a number");
         var newNumber = data + number;
+        return this.set(info,newNumber);
+    }
+    
+    substr(info,number){
+        const data = this.get(info);
+        if(isNaN(data) && isNaN(number)) throw new Error("This is not a number");
+        var newNumber = data - number;
         return this.set(info,newNumber);
     }
 

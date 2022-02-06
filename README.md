@@ -124,8 +124,18 @@ Output:
 Shows the direct file
 ```
 ---
+Version 0.0.2 *
+```diff
++pull Fixed
+```
+
+
+Version 0.0.1
+```diff
++First Release
+```
+---
 
 Thx For Use [all.db](https://www.npmjs.com/package/all.db).
 
 [Discord](https://discord.com/users/360322989515866112).
-

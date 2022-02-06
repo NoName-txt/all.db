@@ -44,6 +44,18 @@ Output:
 1
 ```
 ---
+## Substr
+```js
+const data = require("all.db");
+const db = new data({dataPath:"./data.json"});
+
+db.substr("nonametxt.number",1);
+```
+Output:
+```json
+1-1 = 0
+```
+---
 ## Push
 ```js
 const data = require("all.db");
@@ -124,15 +136,9 @@ Output:
 Shows the direct file
 ```
 ---
-Version 0.0.2 *
+Version 0.0.3 *
 ```diff
-+pull Fixed
-```
-
-
-Version 0.0.1
-```diff
-+First Release
++substr Added
 ```
 ---
 

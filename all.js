@@ -97,6 +97,7 @@ class Database{
 
     pull(info, text, id) {
         const data = this.get(info);
+        if (!Array.isArray(data)) throw new Error("This is not an array");
         var focusIndex = data.map(dt => {
             if(id) return dt[id]; else return dt;
         }).indexOf(text);

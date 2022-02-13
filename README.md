@@ -129,16 +129,19 @@ true or false
 const data = require("all.db");
 const db = new data({dataPath:"./data.json"});
 
-db.getAll("nonametxt");
+db.getAll.text(true);
+db.getAll.save(); //Save File
 ```
 Output:
 ```
 Shows the direct file
 ```
 ---
-Version 0.0.3 *
+Version 0.0.5 *
 ```diff
-+substr Added
++getAll.text() Added
++getAll.save() Added
+-getAll() Removed
 ```
 ---
 

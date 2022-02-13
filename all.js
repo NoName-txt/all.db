@@ -127,7 +127,6 @@ class Database{
         }
         
     }
-    // db.getAll.get("name");
   
   }
 

@@ -15,7 +15,6 @@ class Database{
     set(info, is) {
         const data = this.readFile();
         const text = info.toString();
-
         function setValue(obj, path, value) {
             var ps = path.split(".");
             while (ps.length - 1) {
@@ -25,21 +24,11 @@ class Database{
             }
             obj[ps[0]] = value;
         }
-        
         setValue(data, text, is);
         this.writeFile(data);
         return this.get(info);
-
     }
 
-    delete(info) {
-        return this.set(info,undefined);
-    }
-
-    remove(info) {
-        return this.delete(info);
-    }
-    
     get(info) {
         const data = this.readFile();
         const text = info.toString();
@@ -55,6 +44,15 @@ class Database{
         }
 
         return getValue(data, text);
+    }
+
+
+    delete(info) {
+        return this.set(info,undefined);
+    }
+
+    remove(info) {
+        return this.delete(info);
     }
 
     fetch(info){
@@ -93,7 +91,7 @@ class Database{
             arr.push(value);
             return this.set(info,arr);
         } else {
-            if(hardly != true && typeof data.toLowerCase() === "string"){ 
+            if(hardly != true && typeof data === "string"){ 
                 throw new Error("This is not an array");
             }
             return this.set(info,[value]);
@@ -106,15 +104,30 @@ class Database{
         var focusIndex = data.map(dt => {
             if(id) return dt[id]; else return dt;
         }).indexOf(text);
-
         if (focusIndex !== -1) data.splice(focusIndex, 1);
         return this.set(info,data);
     }
 
-    getAll() {
-        let data = this.readFile();
-        return data;
+    math(info,symbol,number){
+        const data = this.get(info);
+        if((data != 0 && isNaN(data)) || isNaN(number)) throw new Error("This is not a number");
+        let dt = Function(`'use strict'; return (${data}${symbol}${number})`)();
+        return this.set(info,dt);
     }
+
+    getAll = {
+        text(stringify){
+            let data = this.readFile();
+            if(stringify == true) return JSON.stringify(data, null, 2);
+            return data;
+        },
+        save(){
+            let data = this.readFile();
+            return fs.writeFileSync("./save.json",JSON.stringify(data, null, 2), { flag: 'wx' })
+        }
+        
+    }
+    // db.getAll.get("name");
   
   }
 

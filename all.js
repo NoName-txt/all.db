@@ -5,9 +5,9 @@ class Database{
         this.path = dataPath;
         if (!fs.existsSync(dataPath)) {
             console.log("Database file created \nPath: " + this.path);
-            fs.writeFileSync(dataPath,"{}", { flag: 'wx' })
+            fs.writeFileSync(dataPath,`{\n}`, { flag: 'wx' })
         }
-        this.readFile = () => JSON.parse(fs.readFileSync(dataPath, "utf8"));
+        this.readFile = () => JSON.parse(fs.readFileSync(dataPath, "utf-8"));
         this.writeFile = (data) => fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
         
     }    
@@ -32,7 +32,6 @@ class Database{
     get(info) {
         const data = this.readFile();
         const text = info.toString();
-
         function getValue(obj, path) {
             var name = path.split(".");
             while (name.length - 1) {
@@ -115,6 +114,14 @@ class Database{
         return this.set(info,dt);
     }
 
+    typeof(info,type = "show"){
+        const data = this.get(info);
+        if(!data) throw new Error("This is not a data");
+        if(type == "show") return typeof(data);
+        if(typeof data == type) return true;
+        return false;
+    }
+
     getAll = {
         text(stringify){
             let data = this.readFile();
@@ -128,6 +135,6 @@ class Database{
         
     }
   
-  }
+}
 
-  module.exports = Database;
+module.exports = Database;

@@ -184,7 +184,7 @@ true or false
 ---
 
 
-<details><summary>Math</summary>
+<details><summary>Typeof</summary>
 
 ```js
 const data = require("all.db");
@@ -202,7 +202,7 @@ db.typeof("nonametxt.typeof","string");
 
 ---
 
-<details><summary>Typeof</summary>
+<details><summary>Math</summary>
 
 ```js
 const data = require("all.db");
@@ -234,9 +234,9 @@ db.getAll.save(); //Saves the file
 
 
 ---
-Version 0.0.7 *
+Version 0.0.8 *
 ```diff
-+fixed Errors
++README.md Update
 ```
 ---
 

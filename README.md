@@ -234,9 +234,9 @@ db.getAll.save(); //Saves the file
 
 
 ---
-Version 0.0.6 *
+Version 0.0.7 *
 ```diff
-+typeof Added
++fixed Errors
 ```
 ---
 

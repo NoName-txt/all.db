@@ -202,7 +202,7 @@ db.typeof("nonametxt.typeof","string");
 
 ---
 
-<details><summary>Math</summary>
+<details><summary>Typeof</summary>
 
 ```js
 const data = require("all.db");

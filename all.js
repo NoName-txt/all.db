@@ -2,15 +2,11 @@ const fs = require("fs");
 
 class Database{
     constructor({dataPath="./data.json"} = {}){
-        this.path = dataPath;
-        if (!fs.existsSync(dataPath)) {
-            console.log("Database file created \nPath: " + this.path);
-            fs.writeFileSync(dataPath,`{\n}`, { flag: 'wx' })
-        }
+        if (!fs.existsSync(dataPath)) fs.writeFileSync(dataPath,`{\n}`, { flag: 'wx' });
+
         this.readFile = () => JSON.parse(fs.readFileSync(dataPath, "utf-8"));
         this.writeFile = (data) => fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
-        
-    }    
+    }
     
     set(info, is) {
         const data = this.readFile();
@@ -134,7 +130,6 @@ class Database{
         }
         
     }
-  
 }
 
 module.exports = Database;

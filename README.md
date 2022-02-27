@@ -191,10 +191,10 @@ const data = require("all.db");
 const db = new data({dataPath:"./data.json"});
 
 //Shows the type of data
-db.typeof("nonametxt.typeof"); // true or false
+db.typeof("nonametxt.typeof"); // true or false (checks the string)
 
 //Compares the type of data with the type you typed
-db.typeof("nonametxt.typeof","string");
+db.typeof("nonametxt.typeof","number");
 
 ```
 </details>
@@ -212,7 +212,41 @@ const db = new data({dataPath:"./data.json"});
 db.typeof("nonametxt","*",10);
 
 ```
+</details>
 
+
+---
+
+
+<details><summary>Filter</summary>
+
+```js
+const data = require("all.db");
+const db = new data({dataPath:"./data.json"});
+
+//If you have entered data, it will filter and show you.
+db.filter("Database",true); //Searches without checking case
+
+```
+Database:
+```json
+{
+  "string": "DataBase",
+  "otherString": "NoNametxt",
+  "object": {
+    "db": "Database"
+  },
+  "array": ["Database"]
+}
+```
+Output:
+```js
+[
+  [ 'string', 'DataBase' ],
+  [ 'object.db', 'Database' ],
+  [ 'array.0', 'Database' ]
+]
+```
 </details>
 
 
@@ -234,9 +268,9 @@ db.getAll.save(); //Saves the file
 
 
 ---
-Version 0.1.0 *
+Version 0.1.1 *
 ```diff
-+README.md Update
++filter Added
 ```
 ---
 

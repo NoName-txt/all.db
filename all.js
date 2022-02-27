@@ -118,14 +118,27 @@ class Database{
         return false;
     }
 
+    filter(text,tCase){
+        const data = this.readFile();
+        const keys = (t, path = []) => Object(t) === t ? Object.entries(t).flatMap(([k,v]) => keys(v, [...path, k])) : [ path.join(".") ];
+        const result = [];
+        keys(data).forEach(e => {
+            var getData = this.get(e);
+            if(!getData) return;
+            if(tCase === true) { if(getData.toString().toLowerCase() === text.toString().toLowerCase()) return result.push([e,getData]) }
+            else if(getData === text) return result.push([e,getData]);
+        });
+        return result;
+    }
+
     getAll = {
         text(stringify){
-            let data = this.readFile();
+            const data = this.readFile();
             if(stringify == true) return JSON.stringify(data, null, 2);
             return data;
         },
         save(){
-            let data = this.readFile();
+            const data = this.readFile();
             return fs.writeFileSync("./save.json",JSON.stringify(data, null, 2), { flag: 'wx' })
         }
         

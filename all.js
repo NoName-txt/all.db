@@ -3,7 +3,6 @@ const fs = require("fs");
 class Database{
     constructor({dataPath="./data.json"} = {}){
         if (!fs.existsSync(dataPath)) fs.writeFileSync(dataPath,`{\n}`, { flag: 'wx' });
-
         this.readFile = () => JSON.parse(fs.readFileSync(dataPath, "utf-8"));
         this.writeFile = (data) => fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
     }
@@ -66,14 +65,14 @@ class Database{
     }
 
     add(info,number){
-        const data = this.get(info);
+        const data = this.get(info) || 0;
         if(isNaN(data) && isNaN(number)) throw new Error("This is not a number");
         var newNumber = data + number;
         return this.set(info,newNumber);
     }
     
     substr(info,number){
-        const data = this.get(info);
+        const data = this.get(info) || 0;
         if(isNaN(data) && isNaN(number)) throw new Error("This is not a number");
         var newNumber = data - number;
         return this.set(info,newNumber);
@@ -86,7 +85,7 @@ class Database{
             arr.push(value);
             return this.set(info,arr);
         } else {
-            if(hardly != true && typeof data === "string"){ 
+            if(hardly != true && Array.isArray(data)){ 
                 throw new Error("This is not an array");
             }
             return this.set(info,[value]);
@@ -106,14 +105,15 @@ class Database{
     math(info,symbol,number){
         const data = this.get(info);
         if((data != 0 && isNaN(data)) || isNaN(number)) throw new Error("This is not a number");
+        //if(!["+","-","*","/","%"].includes(symbol)) throw new Error("This is not a included symbol"); 
         let dt = Function(`'use strict'; return (${data}${symbol}${number})`)();
         return this.set(info,dt);
     }
 
-    typeof(info,type = "show"){
+    typeof(info,type = "string"){
         const data = this.get(info);
         if(!data) throw new Error("This is not a data");
-        if(type == "show") return typeof(data);
+        if(!["undefined","object","boolean","number","bigint","string","symbol","function"].includes(type.toLowerCase())) throw new Error("This is not a included type");
         if(typeof data == type) return true;
         return false;
     }
@@ -125,8 +125,8 @@ class Database{
         keys(data).forEach(e => {
             var getData = this.get(e);
             if(!getData) return;
-            if(tCase === true) { if(getData.toString().toLowerCase() === text.toString().toLowerCase()) return result.push([e,getData]) }
-            else if(getData === text) return result.push([e,getData]);
+            if(tCase === true && getData.toString().toLowerCase() === text.toString().toLowerCase()) return result.push([e,getData]);
+                else if(getData === text) return result.push([e,getData]);
         });
         return result;
     }

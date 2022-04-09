@@ -40,29 +40,19 @@ class Database{
         return getValue(data, text);
     }
 
-
-    delete(info) {
-        return this.set(info,undefined);
-    }
-
-    remove(info) {
-        return this.delete(info);
-    }
-
-    fetch(info){
-        return this.get(info)
-    }
-
-
     has(info){
         const data = this.get(info);
         if(data === undefined) return false; 
             else return true;
     }
 
-    exists(info){
-        return this.has(info);
-    }
+    delete(info) {return this.set(info,undefined)}
+
+    remove(info) {return this.delete(info)}
+
+    fetch(info){return this.get(info)}
+
+    exists(info){return this.has(info)}
 
     add(info,number){
         const data = this.get(info) || 0;
@@ -104,7 +94,7 @@ class Database{
 
     math(info,symbol,number){
         const data = this.get(info);
-        if((data != 0 && isNaN(data)) || isNaN(number)) throw new Error("This is not a number");
+        if(isNaN(data) || isNaN(number)) throw new Error("This is not a number");
         //if(!["+","-","*","/","%"].includes(symbol)) throw new Error("This is not a included symbol"); 
         let dt = Function(`'use strict'; return (${data}${symbol}${number})`)();
         return this.set(info,dt);
@@ -137,9 +127,9 @@ class Database{
             if(stringify == true) return JSON.stringify(data, null, 2);
             return data;
         },
-        save(){
+        save(path){
             const data = this.readFile();
-            return fs.writeFileSync("./save.json",JSON.stringify(data, null, 2), { flag: 'wx' })
+            return fs.writeFileSync(path,JSON.stringify(data, null, 2), { flag: 'wx' })
         }
         
     }

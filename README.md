@@ -209,7 +209,7 @@ const data = require("all.db");
 const db = new data({dataPath:"./data.json"});
 
 //If the data is a number, applies math operations to data.
-db.typeof("nonametxt","*",10);
+db.math("nonametxt","*",10);
 
 ```
 </details>

@@ -127,9 +127,9 @@ class Database{
             if(stringify == true) return JSON.stringify(data, null, 2);
             return data;
         },
-        save(path){
+        save(path = "./save.json"){
             const data = this.readFile();
-            return fs.writeFileSync(path,JSON.stringify(data, null, 2), { flag: 'wx' })
+            return fs.writeFileSync(path, JSON.stringify(data, null, 2), { flag: 'wx' })
         }
         
     }

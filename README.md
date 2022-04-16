@@ -261,16 +261,16 @@ const db = new data({dataPath:"./data.json"});
 
 db.getAll.text(true); //If output true it shows the file as readable, otherwise it shows the file as a single line
 
-db.getAll.save(); //Saves the file
+db.getAll.save(path); //Saves the file (Path is not required)
 ```
 
 </details>
 
 
 ---
-Version 0.1.3 *
+Version 0.1.5 *
 ```diff
-+filter Fixed
++getAll.save Fixed
 ```
 ---
 

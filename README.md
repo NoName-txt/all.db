@@ -271,14 +271,17 @@ db.getAll.text(true); //If output true it shows the file as readable, otherwise 
 
 db.getAll.save(path); //Saves the file (Path is not required)
 ```
-
+Output:
+```
+{ All Data }
+```
 </details>
 
 
 ---
-Version 0.1.5 *
+Version 0.1.6 *
 ```diff
-+getAll.save Fixed
++README.md Updated
 ```
 ---
 

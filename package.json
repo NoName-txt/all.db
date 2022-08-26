@@ -1,0 +1,17 @@
+{
+  "name": "all.db",
+  "version": "0.1.7",
+  "description": "JSON Database",
+  "main": "all.js",
+  "keywords": [
+    "Simple",
+    "Fast",
+    "JSON Database"
+  ],
+  "author": "NoNametxt",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NoName-txt/all.db"
+  }
+}

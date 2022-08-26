@@ -59,7 +59,7 @@ const db = new data({dataPath:"./data.json"});
 db.add("nonametxt.number",1);
 ```
 Output:
-```
+```css
 data + 1
 ```
 
@@ -79,7 +79,7 @@ const db = new data({dataPath:"./data.json"});
 db.substr("nonametxt.number",1);
 ```
 Output:
-```
+```css
 data - 1
 ```
 </details>
@@ -217,7 +217,7 @@ db.math("nonametxt","*",10);
 
 ```
 Output:
-```js
+```css
 data * 10
 ```
 </details>
@@ -226,6 +226,39 @@ data * 10
 ---
 
 
+<details><summary>Find</summary>
+
+```js
+const data = require("all.db");
+const db = new data({dataPath:"./data.json"});
+
+//If you have entered data, it will find and show you.
+db.find("Database", true); //Searches without checking case
+
+```
+Database:
+```json
+{
+  "string": "DATABASE",
+  "otherString": "NoNametxt",
+  "object": {
+    "db": "database"
+  },
+  "array": ["database"]
+}
+```
+Output:
+```json
+[
+  [ "string", "DATABASE" ],
+  [ "object.db", "database" ],
+  [ "array.0", "database" ]
+]
+```
+</details>
+
+---
+
 <details><summary>Filter</summary>
 
 ```js
@@ -233,8 +266,11 @@ const data = require("all.db");
 const db = new data({dataPath:"./data.json"});
 
 //If you have entered data, it will filter and show you.
-db.filter("Database",true); //Searches without checking case
-
+db.filter(([key, value]) => {
+    try {
+        return value.includes("DataBase");
+    } catch (error){};
+});
 ```
 Database:
 ```json
@@ -244,19 +280,17 @@ Database:
   "object": {
     "db": "Database"
   },
-  "array": ["Database"]
+  "array": [ "Database" ]
 }
 ```
 Output:
-```js
-[
-  [ 'string', 'DataBase' ],
-  [ 'object.db', 'Database' ],
-  [ 'array.0', 'Database' ]
-]
+```json
+{ 
+  "string": "DataBase",
+  "array": [ "DataBase" ] 
+}
 ```
 </details>
-
 
 ---
 
@@ -272,16 +306,17 @@ db.getAll.text(true); //If output true it shows the file as readable, otherwise 
 db.getAll.save(path); //Saves the file (Path is not required)
 ```
 Output:
-```
+```json
 { All Data }
 ```
 </details>
 
 
 ---
-Version 0.1.6 *
+Version 0.1.7 *
 ```diff
-+README.md Updated
++find Added
++filter Added
 ```
 ---
 

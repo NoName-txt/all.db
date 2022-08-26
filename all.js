@@ -26,6 +26,8 @@ class Database{
 
     get(info) {
         const data = this.readFile();
+        if(!info) throw new Error("Please Enter Data Name.");
+
         const text = info.toString();
         function getValue(obj, path) {
             var name = path.split(".");
@@ -70,6 +72,7 @@ class Database{
 
     push(info, value, hardly) {
         const data = this.get(info);
+
         if (Array.isArray(data)) {
             var arr = data || [];
             arr.push(value);
@@ -85,6 +88,8 @@ class Database{
     pull(info, text, id) {
         const data = this.get(info);
         if (!Array.isArray(data)) throw new Error("This is not an array");
+        if(!info) throw new Error("Please Enter Data Name.");
+        
         var focusIndex = data.map(dt => {
             if(id) return dt[id]; else return dt;
         }).indexOf(text);
@@ -108,7 +113,7 @@ class Database{
         return false;
     }
 
-    filter(text,tCase){
+    find(text,tCase){
         const data = this.readFile();
         const keys = (t, path = []) => Object(t) === t ? Object.entries(t).flatMap(([k,v]) => keys(v, [...path, k])) : [ path.join(".") ];
         const result = [];
@@ -121,18 +126,28 @@ class Database{
         return result;
     }
 
+    
+    filter(fnctn, arg) {
+        const data = this.readFile();
+        if (arg) fnctn = callbackfn.bind(arg);
+        return Object.fromEntries(Object.entries(data).filter(fnctn));
+    }
+
     getAll = {
+        Database: this,
         text(stringify){
-            const data = this.readFile();
+            const data = this.Database.readFile();
+            console.log(data);
             if(stringify == true) return JSON.stringify(data, null, 2);
             return data;
         },
         save(path = "./save.json"){
-            const data = this.readFile();
+            const data = this.Database.readFile();
             return fs.writeFileSync(path, JSON.stringify(data, null, 2), { flag: 'wx' })
         }
         
     }
+
 }
 
 module.exports = Database;

@@ -278,9 +278,9 @@ Database:
   "string": "DataBase",
   "otherString": "NoNametxt",
   "object": {
-    "db": "Database"
+    "db": "DataBase"
   },
-  "array": [ "Database" ]
+  "array": [ "DataBase" ]
 }
 ```
 Output:
@@ -313,10 +313,9 @@ Output:
 
 
 ---
-Version 0.1.7 *
+Version 0.1.8 *
 ```diff
-+find Added
-+filter Added
++README.md Updated
 ```
 ---
 

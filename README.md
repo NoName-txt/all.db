@@ -197,6 +197,10 @@ db.typeof("nonametxt.typeof"); // true or false (checks the string)
 db.typeof("nonametxt.typeof","number");
 
 ```
+Output:
+```js
+true or false
+```
 </details>
 
 
@@ -211,6 +215,10 @@ const db = new data({dataPath:"./data.json"});
 //If the data is a number, applies math operations to data.
 db.math("nonametxt","*",10);
 
+```
+Output:
+```js
+data * 10
 ```
 </details>
 

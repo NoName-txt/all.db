@@ -137,7 +137,6 @@ class Database{
         Database: this,
         text(stringify){
             const data = this.Database.readFile();
-            console.log(data);
             if(stringify == true) return JSON.stringify(data, null, 2);
             return data;
         },

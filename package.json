@@ -1,6 +1,6 @@
 {
   "name": "all.db",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "JSON Database",
   "main": "all.js",
   "keywords": [

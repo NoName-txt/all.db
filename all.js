@@ -127,10 +127,10 @@ class Database{
     }
 
     
-    filter(fnctn, arg) {
+    filter(func, arg) {
         const data = this.readFile();
-        if (arg) fnctn = callbackfn.bind(arg);
-        return Object.fromEntries(Object.entries(data).filter(fnctn));
+        if (arg) func = func.bind(arg);
+        return Object.fromEntries(Object.entries(data).filter(func));
     }
 
     getAll = {

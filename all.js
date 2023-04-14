@@ -1,152 +1,233 @@
 const fs = require("fs");
 
-class Database{
-    constructor({dataPath="./data.json"} = {}){
-        if (!fs.existsSync(dataPath)) fs.writeFileSync(dataPath,`{\n}`, { flag: 'wx' });
+class Database {
+    constructor({ dataPath = "./data.json" } = {}) {
+        if (!fs.existsSync(dataPath)) fs.writeFileSync(dataPath, `{\n}`, { flag: 'wx' });
         this.readFile = () => JSON.parse(fs.readFileSync(dataPath, "utf-8"));
         this.writeFile = (data) => fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
     }
-    
-    set(info, is) {
+
+    set(info, value) {
         const data = this.readFile();
+        if (!info) throw new Error("Please enter data name.");
+
         const text = info.toString();
+
         function setValue(obj, path, value) {
-            var ps = path.split(".");
-            while (ps.length - 1) {
-                var pst = ps.shift();
-                if (!(pst in obj)) obj[pst] = {};
-                obj = obj[pst];
+            const name = path.split(".");
+            let current = obj;
+            for (let i = 0; i < name.length - 1; i++) {
+                const prop = name[i];
+                if (typeof current[prop] !== "object" || current[prop] === null) {
+                    current[prop] = {};
+                }
+                current = current[prop];
             }
-            obj[ps[0]] = value;
+            const key = name[name.length - 1];
+            const index = parseInt(key);
+            if (value === undefined && Array.isArray(current) && !isNaN(index)) {
+                current.splice(index, 1);
+            } else {
+                current[key] = value;
+            }
         }
-        setValue(data, text, is);
+
+        setValue(data, text, value);
         this.writeFile(data);
         return this.get(info);
     }
 
+
     get(info) {
         const data = this.readFile();
-        if(!info) throw new Error("Please Enter Data Name.");
+        if (!info) throw new Error("Please enter data name.");
 
         const text = info.toString();
+
         function getValue(obj, path) {
-            var name = path.split(".");
-            while (name.length - 1) {
-                var nshift = name.shift();
-                if (!(nshift in obj)) obj[nshift] = {}
-                obj = obj[nshift]
+            const name = path.split(".");
+            let current = obj;
+            for (const prop of name) {
+                if (typeof current !== "object" || !current.hasOwnProperty(prop)) {
+                    return undefined;
+                }
+                current = current[prop];
             }
-            return obj[name[0]]
+            return current;
         }
 
         return getValue(data, text);
     }
 
-    has(info){
+    has(info) {
+        return this.get(info) !== undefined;
+    }
+
+    add(info, number) {
+        const data = this.get(info) || 0;
+        if (isNaN(data) && isNaN(number)) {
+            throw new Error("This is not a number");
+        }
+        return this.set(info, (data + number));
+    }
+
+    substr(info, number) {
         const data = this.get(info);
-        if(data === undefined) return false; 
-            else return true;
+        if (isNaN(data) || isNaN(number)) {
+            throw new Error("Both arguments must be numbers.");
+        }
+        return this.set(info, (data - number));
     }
 
-    delete(info) {return this.set(info,undefined)}
-
-    remove(info) {return this.delete(info)}
-
-    fetch(info) {return this.get(info)}
-
-    exists(info) {return this.has(info)}
-
-    add(info,number){
-        const data = this.get(info) || 0;
-        if(isNaN(data) && isNaN(number)) throw new Error("This is not a number");
-        var newNumber = data + number;
-        return this.set(info,newNumber);
-    }
-    
-    substr(info,number){
-        const data = this.get(info) || 0;
-        if(isNaN(data) && isNaN(number)) throw new Error("This is not a number");
-        var newNumber = data - number;
-        return this.set(info,newNumber);
-    }
 
     push(info, value, hardly) {
         const data = this.get(info);
 
         if (Array.isArray(data)) {
-            var arr = data || [];
-            arr.push(value);
-            return this.set(info,arr);
+            data.push(value);
+            return this.set(info, data);
         } else {
-            if(hardly != true && Array.isArray(data)){ 
+            if (hardly !== true) {
                 throw new Error("This is not an array");
             }
-            return this.set(info,[value]);
+            return this.set(info, [value]);
         }
     }
 
-    pull(info, text, id) {
+
+    pull(info, index, text, id) {
         const data = this.get(info);
-        if (!Array.isArray(data)) throw new Error("This is not an array");
-        if(!info) throw new Error("Please Enter Data Name.");
-        
-        var focusIndex = data.map(dt => {
-            if(id) return dt[id]; else return dt;
-        }).indexOf(text);
-        if (focusIndex !== -1) data.splice(focusIndex, 1);
-        return this.set(info,data);
+        if (!Array.isArray(data)) {
+            throw new Error("This is not an array");
+        }
+        if (!info) {
+            throw new Error("Please enter data name.");
+        }
+
+        let focusIndex;
+        if (index !== null) {
+            if (index < 0 || index >= data.length) {
+                throw new Error("Index out of range");
+            }
+            focusIndex = index;
+        } else if (text) {
+            focusIndex = data.findIndex((dt) => {
+                if (id) {
+                    return dt[id] === text;
+                } else {
+                    return dt === text;
+                }
+            });
+        }
+
+        if (focusIndex !== -1) {
+            data.splice(focusIndex, 1);
+        }
+
+        return this.set(info, data);;
     }
 
-    math(info,symbol,number){
+
+    math(info, symbol, number) {
         const data = this.get(info);
-        if(isNaN(data) || isNaN(number)) throw new Error("This is not a number");
-        //if(!["+","-","*","/","%"].includes(symbol)) throw new Error("This is not a included symbol"); 
-        let dt = Function(`'use strict'; return (${data}${symbol}${number})`)();
-        return this.set(info,dt);
+        if (isNaN(data) || isNaN(number)) throw new Error("This is not a number");
+        let dt;
+        switch (symbol) {
+            case "+":
+                dt = data + number;
+                break;
+            case "-":
+                dt = data - number;
+                break;
+            case "*":
+                dt = data * number;
+                break;
+            case "/":
+                dt = data / number;
+                break;
+            case "%":
+                dt = data % number;
+                break;
+            default:
+                throw new Error("Invalid symbol");
+        }
+        return this.set(info, dt);
     }
 
-    typeof(info,type = "string"){
+
+    typeof(info, type = "string") {
         const data = this.get(info);
-        if(!data) throw new Error("This is not a data");
-        if(!["undefined","object","boolean","number","bigint","string","symbol","function"].includes(type.toLowerCase())) throw new Error("This is not a included type");
-        if(typeof data == type) return true;
+        if (!data) {
+            throw new Error("This is not a data");
+        }
+        const allowedTypes = ["undefined", "object", "boolean", "number", "bigint", "string", "symbol", "function"];
+        if (!allowedTypes.includes(type.toLowerCase())) {
+            throw new Error("This type is not included");
+        }
+        if (typeof data === type) {
+            return true;
+        }
         return false;
     }
 
-    find(text,tCase){
+    find(text, tCase) {
         const data = this.readFile();
-        const keys = (t, path = []) => Object(t) === t ? Object.entries(t).flatMap(([k,v]) => keys(v, [...path, k])) : [ path.join(".") ];
+        const getKeys = (obj, path = []) => {
+            if (Object(obj) !== obj) {
+                return [path.join(".")];
+            }
+            return Object.entries(obj).flatMap(([key, val]) =>
+                getKeys(val, [...path, key])
+            );
+        };
         const result = [];
-        keys(data).forEach(e => {
-            var getData = this.get(e);
-            if(!getData) return;
-            if(tCase === true && getData.toString().toLowerCase() === text.toString().toLowerCase()) return result.push([e,getData]);
-                else if(getData === text) return result.push([e,getData]);
+        getKeys(data).forEach(key => {
+            const getData = this.get(key);
+            if (!getData) {
+                return;
+            }
+            if (tCase && getData.toString().toLowerCase() === text.toString().toLowerCase()) {
+                result.push([key, getData]);
+            } else if (getData === text) {
+                result.push([key, getData]);
+            }
         });
         return result;
     }
 
-    
+
+
     filter(func, arg) {
         const data = this.readFile();
-        if (arg) func = func.bind(arg);
-        return Object.fromEntries(Object.entries(data).filter(func));
+        if (arg) {
+            func = func.bind(arg);
+        }
+        const filteredEntries = Object.entries(data).filter(func);
+        return Object.fromEntries(filteredEntries);
     }
 
     getAll = {
         Database: this,
-        text(stringify){
+        text(stringify) {
             const data = this.Database.readFile();
-            if(stringify == true) return JSON.stringify(data, null, 2);
+            if (stringify) {
+                return JSON.stringify(data, null, 2);
+            }
             return data;
         },
-        save(path = "./save.json"){
+        save(path = './save.json') {
             const data = this.Database.readFile();
-            return fs.writeFileSync(path, JSON.stringify(data, null, 2), { flag: 'wx' })
-        }
-        
-    }
+            fs.writeFileSync(path, JSON.stringify(data, null, 2), { flag: 'wx' });
+        },
+    };
 
+    delete(info) { return this.set(info, undefined) }
+
+    remove(info) { return this.delete(info) }
+
+    fetch(info) { return this.get(info) }
+
+    exists(info) { return this.has(info) }
 }
 
 module.exports = Database;

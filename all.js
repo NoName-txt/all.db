@@ -52,9 +52,9 @@ class Database{
 
     remove(info) {return this.delete(info)}
 
-    fetch(info){return this.get(info)}
+    fetch(info) {return this.get(info)}
 
-    exists(info){return this.has(info)}
+    exists(info) {return this.has(info)}
 
     add(info,number){
         const data = this.get(info) || 0;

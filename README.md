@@ -313,9 +313,9 @@ Output:
 
 
 ---
-Version 0.1.8 *
+Version 0.2.0 *
 ```diff
-+README.md Updated
++Fixed Some Function
 ```
 ---
 

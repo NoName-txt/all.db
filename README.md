@@ -314,10 +314,9 @@ Output:
 
 
 ---
-Version 0.2.1 *
+Version 0.2.3 *
 ```diff
-+ Fixed delete
-+++ When you tried to delete the array, it was replaced by null. Now it is deleted directly.
++ Updated README.md
 ```
 ---
 

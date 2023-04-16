@@ -83,7 +83,12 @@ class Database {
     push(info, value, hardly) {
         const data = this.get(info);
 
-        if (Array.isArray(data)) {
+        if (data == null) {
+            if (hardly !== true) {
+                return this.set(info, [value]);
+            }
+            throw new Error("This is not an array");
+        } else if (Array.isArray(data)) {
             data.push(value);
             return this.set(info, data);
         } else {
@@ -93,6 +98,7 @@ class Database {
             return this.set(info, [value]);
         }
     }
+
 
 
     pull(info, index, text, id) {

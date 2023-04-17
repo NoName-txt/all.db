@@ -6,7 +6,7 @@ If you found a bug contact me on [Discord](https://discord.com/users/36032298951
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 // Sets a data in the database
 db.set("nonametxt.test", "all.db");
@@ -25,12 +25,31 @@ Output:
 
 ---
 
+<details><summary>Get</summary>
+
+```js
+const alldb = require("all.db");
+const db = new alldb.Database({ dataPath: "./data.json" });
+
+//Fetches you the data
+db.get("nonametxt");
+db.fetch("nonametxt");
+```
+Output:
+```json
+"all.db"
+```
+</details>
+
+
+---
+
 
 <details><summary>Delete</summary>
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //Deletes data
 db.delete("nonametxt.test");
@@ -50,7 +69,7 @@ Output:
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //If the data is a number, it adds a certain amount to data
 db.add("nonametxt.number", 1);
@@ -66,14 +85,14 @@ data + 1
 ---
 
 
-<details><summary>Substr</summary>
+<details><summary>Subtract</summary>
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //If the data is a number, it subtracts a certain amount from it
-db.substr("nonametxt.number", 1);
+db.subtract("nonametxt.number", 1);
 ```
 Output:
 ```js
@@ -89,7 +108,7 @@ data - 1
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 db.push("nonametxt.array", { name: "NoNametxt" });
 
 //Pushes an element to an array
@@ -119,16 +138,16 @@ Output:
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
-//Deletion by index
-db.pull("nonametxt.array", 0);
+//Specify the object you want to delete.
+db.pull("nonametxt.array", (value) => {
+  try{
+    return value.name == "NoNametxt";
+  }catch(error){
 
-//Deleting element in array by object
-db.pull("nonametxt.array", null, "NoNametxt", "name");
-
-//Direct deletion of the data in the array if it is not Object
-db.pull("nonametxt.array", null, "NoNametxt");
+  }
+});
 ```
 Output:
 ```json
@@ -144,32 +163,11 @@ Output:
 ---
 
 
-
-<details><summary>Get</summary>
-
-```js
-const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
-
-//Fetches you the data
-db.get("nonametxt");
-db.fetch("nonametxt");
-```
-Output:
-```json
-"all.db"
-```
-</details>
-
-
----
-
-
 <details><summary>Data Exists</summary>
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //Checks the data is available
 db.exists("nonametxt.test");
@@ -189,7 +187,7 @@ true or false
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //Shows the type of data
 db.typeof("nonametxt.typeof"); // true or false (checks the string)
@@ -211,7 +209,7 @@ true or false
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //If the data is a number, applies math operations to data.
 db.math("nonametxt", "*", 10);
@@ -231,7 +229,7 @@ data * 10
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //If you have entered data, it will find and show you.
 db.find("Database", true); //Searches without checking case
@@ -264,13 +262,15 @@ Output:
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
 //If you have entered data, it will filter and show you.
 db.filter(([key, value]) => {
     try {
       return value.includes("DataBase");
-    } catch (error){};
+    } catch (error){
+
+    };
 });
 ```
 Database:
@@ -300,11 +300,11 @@ Output:
 
 ```js
 const alldb = require("all.db");
-const db = new alldb({ dataPath: "./data.json" });
+const db = new alldb.Database({ dataPath: "./data.json" });
 
-db.getAll.text(true); //If output true it shows the file as readable, otherwise it shows the file as a single line
+db.getAll(); //Returns JSON Data
 
-db.getAll.save(path); //Saves the file (Path is not required)
+db.getAll().save(path); //Saves the data to the specified path
 ```
 Output:
 ```
@@ -314,12 +314,12 @@ Output:
 
 
 ---
-Version 0.2.4 *
+Version 0.2.5 *
 ```diff
-+ Push Fixed
++ Pull Changed
++ Delete Changed
++ GetAll Changed
 ```
 ---
 
 Thx for use [all.db](https://www.npmjs.com/package/all.db).
-
-[Discord](https://discord.com/users/360322989515866112).

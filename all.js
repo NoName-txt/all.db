@@ -1,17 +1,18 @@
 const fs = require("fs");
 
+
 class Database {
     constructor({ dataPath = "./data.json" } = {}) {
         if (!fs.existsSync(dataPath)) fs.writeFileSync(dataPath, `{\n}`, { flag: 'wx' });
         this.readFile = () => JSON.parse(fs.readFileSync(dataPath, "utf-8"));
-        this.writeFile = (data) => fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+        this.writeFile = (data) => fs.writeFileSync(dataPath, JSON.stringify(data, null, 4));
     }
 
-    set(info, value) {
+    set(key, value) {
         const data = this.readFile();
-        if (!info) throw new Error("Please enter data name.");
+        if (!key) throw new Error("Please enter data name.");
 
-        const text = info.toString();
+        const text = key.toString();
 
         function setValue(obj, path, value) {
             const name = path.split(".");
@@ -34,15 +35,15 @@ class Database {
 
         setValue(data, text, value);
         this.writeFile(data);
-        return this.get(info);
+        return this.get(key);
     }
 
 
-    get(info) {
+    get(key) {
         const data = this.readFile();
-        if (!info) throw new Error("Please enter data name.");
+        if (!key) throw new Error("Please enter key.");
 
-        const text = info.toString();
+        const text = key.toString();
 
         function getValue(obj, path) {
             const name = path.split(".");
@@ -59,83 +60,98 @@ class Database {
         return getValue(data, text);
     }
 
-    has(info) {
-        return this.get(info) !== undefined;
-    }
+    delete(key) {
+        if (typeof key === "function") {
+            const filtered = this.filter(key);
 
-    add(info, number) {
-        const data = this.get(info) || 0;
-        if (isNaN(data) && isNaN(number)) {
-            throw new Error("This is not a number");
+            Object.keys(filtered).forEach(i => {
+                this.set(i, undefined);
+            });
+
+            return filtered;
+        } else if (typeof key === "string") {
+            return this.set(key, undefined);
+        } else {
+            throw new Error("Key can only be string or function");
         }
-        return this.set(info, (data + number));
     }
 
-    substr(info, number) {
-        const data = this.get(info);
+
+    add(key, number) {
+        const data = this.get(key) || 0;
         if (isNaN(data) || isNaN(number)) {
             throw new Error("Both arguments must be numbers.");
         }
-        return this.set(info, (data - number));
+        return this.set(key, (data + number));
+    }
+
+    subtract(key, number) {
+        const data = this.get(key);
+        if (isNaN(data) || isNaN(number)) {
+            throw new Error("Both arguments must be numbers.");
+        }
+        return this.set(key, (data - number));
     }
 
 
-    push(info, value, hardly) {
-        const data = this.get(info);
+    push(key, value, hardly) {
+        const data = this.get(key);
 
         if (data == null) {
             if (hardly !== true) {
-                return this.set(info, [value]);
+                return this.set(key, [value]);
             }
             throw new Error("This is not an array");
         } else if (Array.isArray(data)) {
             data.push(value);
-            return this.set(info, data);
+            return this.set(key, data);
         } else {
             if (hardly !== true) {
                 throw new Error("This is not an array");
             }
-            return this.set(info, [value]);
+            return this.set(key, [value]);
         }
     }
 
 
+    pull(key, func) {
+        const data = this.get(key);
+        if (!Array.isArray(data)) throw new Error("This is not an array");
+        if (typeof func !== "function") throw new Error("This is not a function");
 
-    pull(info, index, text, id) {
-        const data = this.get(info);
-        if (!Array.isArray(data)) {
-            throw new Error("This is not an array");
-        }
-        if (!info) {
-            throw new Error("Please enter data name.");
-        }
+        const filteredItems = Object.entries(data).filter(func);
+        filteredItems.forEach(([value]) => {
+            const index = data.indexOf(value);
+            data.splice(index, 1);
+        });
 
-        let focusIndex;
-        if (index !== null) {
-            if (index < 0 || index >= data.length) {
-                throw new Error("Index out of range");
-            }
-            focusIndex = index;
-        } else if (text) {
-            focusIndex = data.findIndex((dt) => {
-                if (id) {
-                    return dt[id] === text;
-                } else {
-                    return dt === text;
-                }
-            });
-        }
-
-        if (focusIndex !== -1) {
-            data.splice(focusIndex, 1);
-        }
-
-        return this.set(info, data);;
+        return this.set(key, data);
     }
 
 
-    math(info, symbol, number) {
-        const data = this.get(info);
+    has(key) {
+        return this.get(key) !== undefined;
+    }
+
+
+    typeof(key, type = "string") {
+        const data = this.get(key);
+        if (!data) {
+            throw new Error("This is not a data");
+        }
+        const allowedTypes = ["undefined", "object", "boolean", "number", "bigint", "string", "symbol", "function"];
+        if (!allowedTypes.includes(type.toLowerCase())) {
+            throw new Error("This type is not included");
+        }
+        if (typeof data === type) {
+            return true;
+        }
+        return false;
+    }
+
+
+    math(key, symbol, number) {
+        const data = this.get(key);
         if (isNaN(data) || isNaN(number)) throw new Error("This is not a number");
         let dt;
         switch (symbol) {
@@ -157,24 +173,9 @@ class Database {
             default:
                 throw new Error("Invalid symbol");
         }
-        return this.set(info, dt);
+        return this.set(key, dt);
     }
 
-
-    typeof(info, type = "string") {
-        const data = this.get(info);
-        if (!data) {
-            throw new Error("This is not a data");
-        }
-        const allowedTypes = ["undefined", "object", "boolean", "number", "bigint", "string", "symbol", "function"];
-        if (!allowedTypes.includes(type.toLowerCase())) {
-            throw new Error("This type is not included");
-        }
-        if (typeof data === type) {
-            return true;
-        }
-        return false;
-    }
 
     find(text, tCase) {
         const data = this.readFile();
@@ -203,37 +204,40 @@ class Database {
 
 
 
-    filter(func, arg) {
+    filter(func) {
         const data = this.readFile();
-        if (arg) {
-            func = func.bind(arg);
-        }
+        if (typeof func !== "function") throw new Error("This is not a function");
+
         const filteredEntries = Object.entries(data).filter(func);
         return Object.fromEntries(filteredEntries);
     }
 
-    getAll = {
-        Database: this,
-        text(stringify) {
-            const data = this.Database.readFile();
-            if (stringify) {
-                return JSON.stringify(data, null, 2);
+    getAll() {
+        const data = this.readFile();
+        const newData = JSON.parse(JSON.stringify(data));
+        Object.defineProperty(newData, 'save', {    
+            enumerable: false,        
+            value: function(path = './save.json') {
+                if (!fs.existsSync(path)) {
+                    fs.writeFileSync(path, JSON.stringify(newData, null, 4), { flag: 'wx' });
+                } else {
+                    fs.writeFileSync(path, JSON.stringify(newData, null, 4));
+                }
+
             }
-            return data;
-        },
-        save(path = './save.json') {
-            const data = this.Database.readFile();
-            fs.writeFileSync(path, JSON.stringify(data, null, 2), { flag: 'wx' });
-        },
-    };
+        });
+        return newData;
+    }
 
-    delete(info) { return this.set(info, undefined) }
+    remove(key) { return this.delete(key) }
 
-    remove(info) { return this.delete(info) }
+    fetch(key) { return this.get(key) }
 
-    fetch(info) { return this.get(info) }
+    exists(key) { return this.has(key) }
 
-    exists(info) { return this.has(info) }
+    substr(key, number) { return this.subtract(key, number) }
 }
 
-module.exports = Database;
+module.exports = {
+    Database: Database
+};

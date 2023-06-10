@@ -143,7 +143,7 @@ const db = new alldb.Database({ dataPath: "./data.json" });
 //Specify the object you want to delete.
 db.pull("nonametxt.array", (value) => {
   try{
-    return value.name == "NoNametxt";
+    return value[1].name == "NoNametxt";
   }catch(error){
 
   }
@@ -314,11 +314,9 @@ Output:
 
 
 ---
-Version 0.2.5 *
+Version 0.2.6 *
 ```diff
-+ Pull Changed
-+ Delete Changed
-+ GetAll Changed
++ README.md Changed
 ```
 ---
 

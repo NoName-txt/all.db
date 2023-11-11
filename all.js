@@ -86,7 +86,7 @@ class Database {
     }
 
     subtract(key, number) {
-        const data = this.get(key);
+        const data = this.get(key) || 0;
         if (isNaN(data) || isNaN(number)) {
             throw new Error("Both arguments must be numbers.");
         }
@@ -120,9 +120,9 @@ class Database {
         if (typeof func !== "function") throw new Error("This is not a function");
 
         const filteredItems = Object.entries(data).filter(func);
-        filteredItems.forEach(([value]) => {
-            const index = data.indexOf(value);
-            data.splice(index, 1);
+        filteredItems.forEach((value) => {
+            const index = data.indexOf(value[1]);
+            if(index != -1) data.splice(index, 1);
         });
 
         return this.set(key, data);

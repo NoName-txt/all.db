@@ -314,9 +314,9 @@ Output:
 
 
 ---
-Version 0.2.6 *
+Version 0.2.8 *
 ```diff
-+ README.md Changed
++ subtract Fixed
 ```
 ---
 

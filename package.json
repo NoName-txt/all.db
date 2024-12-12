@@ -1,9 +1,9 @@
 {
   "name": "all.db",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "JSON Database",
   "types": "lib/all.db.d.ts",
-  "main": "lib/all.db",
+  "main": "lib/all.db.js",
   "keywords": [
     "Simple",
     "Fast",

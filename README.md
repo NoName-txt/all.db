@@ -5,8 +5,8 @@ If you found a bug contact me on [Discord](https://discord.com/users/36032298951
 <details><summary>Set</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 // Sets a data in the database
 db.set("nonametxt.test", "all.db");
@@ -28,8 +28,8 @@ Output:
 <details><summary>Get</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //Fetches you the data
 db.get("nonametxt");
@@ -48,8 +48,8 @@ Output:
 <details><summary>Delete</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //Deletes data
 db.delete("nonametxt.test");
@@ -68,8 +68,8 @@ Output:
 <details><summary>Add</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //If the data is a number, it adds a certain amount to data
 db.add("nonametxt.number", 1);
@@ -88,8 +88,8 @@ data + 1
 <details><summary>Subtract</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //If the data is a number, it subtracts a certain amount from it
 db.subtract("nonametxt.number", 1);
@@ -107,8 +107,8 @@ data - 1
 <details><summary>Push</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 db.push("nonametxt.array", { name: "NoNametxt" });
 
 //Pushes an element to an array
@@ -137,8 +137,8 @@ Output:
 <details><summary>Pull</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //Specify the object you want to delete.
 db.pull("nonametxt.array", (value) => {
@@ -166,8 +166,8 @@ Output:
 <details><summary>Data Exists</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //Checks the data is available
 db.exists("nonametxt.test");
@@ -186,8 +186,8 @@ true or false
 <details><summary>Typeof</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //Shows the type of data
 db.typeof("nonametxt.typeof"); // true or false (checks the string)
@@ -208,8 +208,8 @@ true or false
 <details><summary>Math</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //If the data is a number, applies math operations to data.
 db.math("nonametxt", "*", 10);
@@ -228,8 +228,8 @@ data * 10
 <details><summary>Find</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //If you have entered data, it will find and show you.
 db.find("Database", true); //Searches without checking case
@@ -261,8 +261,8 @@ Output:
 <details><summary>Filter</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 //If you have entered data, it will filter and show you.
 db.filter(([key, value]) => {
@@ -299,8 +299,8 @@ Output:
 <details><summary>Get All</summary>
 
 ```js
-const alldb = require("all.db");
-const db = new alldb.Database({ dataPath: "./data.json" });
+import { Database } from "all.db";
+const db = new Database({ dataPath: "./data.json" });
 
 db.getAll(); //Returns JSON Data
 
@@ -314,9 +314,9 @@ Output:
 
 
 ---
-Version 0.2.8 *
+Version 0.3.0 *
 ```diff
-+ subtract Fixed
++ ESNext
 ```
 ---
 

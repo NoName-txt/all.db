@@ -96,14 +96,11 @@ class Database {
     }
 
 
-    push(key: string, value: any, hardly: boolean) {
+    push(key: string, value: any, hardly: boolean = false) {
         const data = this.get(key);
 
         if (data == null) {
-            if (hardly !== true) {
-                return this.set(key, [value]);
-            }
-            throw new Error("This is not an array");
+            return this.set(key, [value]);
         } else if (Array.isArray(data)) {
             data.push(value);
             return this.set(key, data);

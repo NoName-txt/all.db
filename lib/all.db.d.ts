@@ -9,7 +9,7 @@ declare class Database {
     delete(key: string): any;
     add(key: string, number: number): any;
     subtract(key: string, number: number): any;
-    push(key: string, value: any, hardly: boolean): any;
+    push(key: string, value: any, hardly?: boolean): any;
     pull(key: string, func: any): any;
     has(key: string): boolean;
     typeof(key: string, type?: string): boolean;

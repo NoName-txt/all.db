@@ -1,6 +1,6 @@
 {
   "name": "all.db",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "JSON Database",
   "types": "lib/all.db.d.ts",
   "main": "lib/all.db.js",
@@ -14,7 +14,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NoName-txt/all.db"
+    "url": "git+https://github.com/NoName-txt/all.db.git"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
